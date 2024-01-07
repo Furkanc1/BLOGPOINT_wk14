@@ -1,4 +1,4 @@
-// config.js file: 
+// config.js file:
 // needed for Database configuration for Sequelize
 // also will include setup for connecting to MySQL and defining Models to be used as a reference in other parts of my project
 // necessary: Database_host, User, password, and the databse name + connection to Database (in this case MySQL2/workbench)
@@ -12,13 +12,12 @@ const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 // where we are creating that connection to the database:
 const sequelize = new Sequelize({
-    dialect: `mysql`,
-    // where we are using environmental variables (from .env file)
-    host: DB_HOST,
-    username: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_NAME
-})
+  dialect: `mysql`,
+  // where we are using environmental variables (from .env file)
+  host: DB_HOST,
+  username: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_NAME,
+});
 
 module.exports = sequelize;
-
