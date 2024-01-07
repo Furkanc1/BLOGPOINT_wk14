@@ -1,27 +1,51 @@
-const router = require("express").Router();
-const { User, Post } = require("../models");
+const express = require('express');
+const router = express.Router();
+const { Post } = require('../models/');
+const withAuth = require('../utils/auth');
 
-// Dashboard route to render the user's blog posts
-router.get("/", async (req, res) => {
+router.get('/', withAuth, async (req, res) => {
   try {
-    // here we check if the user is logged in
-    if (!req.session.logged_in) {
-      return res.redirect("/login"); // redirects to login if not logged in
-    }
-
-    // Find the user by their ID and include their posts on dashboard
-    const userData = await User.findByPk(req.session.user_id, {
-      attributes: { exclude: ["password"] },
-      include: [
-        { model: Post, attributes: ["id", "title", "content", "createdAt"] },
-      ],
+    const postData = await Post.findAll({
+      where: {
+        userId: req.session.userId,
+      },
     });
 
-    // Render the dashboard view with user data
-    res.render("dashboard", { userData });
-  } catch (err) {
-    console.error("Error in the /dashboard route:", err);
-    res.status(500).json({ message: "Internal server error" });
+    const posts = postData.map(post => post.get({ plain: true }));
+
+    res.render('admin-all-posts', {
+      layout: 'dashboard',
+      posts,
+    });
+  } catch (error) {
+    console.error('Error retrieving posts:', error);
+    res.redirect('login');
+  }
+});
+
+router.get('/new', withAuth, (req, res) => {
+  res.render('admin-new-post', {
+    layout: 'dashboard',
+  });
+});
+
+router.get('/edit/:id', withAuth, async (req, res) => {
+  try {
+    const postData = await Post.findByPk(req.params.id);
+
+    if (postData) {
+      const post = postData.get({ plain: true });
+
+      res.render('admin-edit-post', {
+        layout: 'dashboard',
+        post,
+      });
+    } else {
+      res.status(404).end();
+    }
+  } catch (error) {
+    console.error('Error retrieving post for editing:', error);
+    res.redirect('login');
   }
 });
 

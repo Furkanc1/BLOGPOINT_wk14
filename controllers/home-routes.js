@@ -1,25 +1,25 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { Post, Comment, User } = require("../models/");
+const { Post, Comment, User } = require('../models/');
 
-// Route to get all posts for homepage
-router.get("/", async (req, res) => {
+// Route to get all posts for the homepage
+router.get('/', async (req, res) => {
   try {
     const postData = await Post.findAll({
       include: [User],
     });
 
-    const posts = postData.map((post) => post.get({ plain: true }));
+    const posts = postData.map(post => post.get({ plain: true }));
 
-    res.render("all-posts", { posts });
-  } catch (err) {
-    console.error("Error getting all posts:", err);
-    res.status(500).json({ message: "Internal server error" });
+    res.render('all-posts', { posts });
+  } catch (error) {
+    console.error('Error retrieving all posts:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
 // Route to get a single post
-router.get("/post/:id", async (req, res) => {
+router.get('/post/:id', async (req, res) => {
   try {
     const postData = await Post.findByPk(req.params.id, {
       include: [
@@ -33,31 +33,31 @@ router.get("/post/:id", async (req, res) => {
 
     if (postData) {
       const post = postData.get({ plain: true });
-      res.render("single-post", { post });
+      res.render('single-post', { post });
     } else {
       res.status(404).end();
     }
-  } catch (err) {
-    console.error("Error getting single post:", err);
-    res.status(500).json({ message: "Internal server error" });
+  } catch (error) {
+    console.error('Error retrieving single post:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-// Route to render login page
-router.get("/login", (req, res) => {
+// Route to render the login page
+router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect("/");
+    res.redirect('/');
   } else {
-    res.render("login");
+    res.render('login');
   }
 });
 
-// Route to render signup page
-router.get("/signup", (req, res) => {
+// Route to render the signup page
+router.get('/signup', (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect("/");
+    res.redirect('/');
   } else {
-    res.render("signup");
+    res.render('signup');
   }
 });
 
