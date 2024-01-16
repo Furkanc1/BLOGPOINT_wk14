@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { Post, Comment, User } = require('../models/');
+const router = require('express').Router();
+
+const { Post, Comment, User } = require('../models');
 
 // Route to get all posts for the homepage
 router.get('/', async (req, res) => {
@@ -11,7 +11,10 @@ router.get('/', async (req, res) => {
 
     const posts = postData.map(post => post.get({ plain: true }));
 
-    res.render('all-posts', { posts });
+    res.render('homePage', {
+       posts,
+       logged_in: req.session.loggedIn,
+     });
   } catch (error) {
     console.error('Error retrieving all posts:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -33,7 +36,12 @@ router.get('/post/:id', async (req, res) => {
 
     if (postData) {
       const post = postData.get({ plain: true });
-      res.render('single-post', { post });
+      res.render('single-post', { 
+        post,
+        userId: req.session.userId,
+        path: req.route.path,
+        title: `BlogPoint`,
+      });
     } else {
       res.status(404).end();
     }
