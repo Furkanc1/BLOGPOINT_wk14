@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Post } = require('../../models');
 const withAuth = require('../../utils/auth');
 
-router.post('/new', withAuth, async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
   const body = req.body;
 
   try {
@@ -13,31 +13,12 @@ router.post('/new', withAuth, async (req, res) => {
   }
 });
 
-router.put('/edit/:id', withAuth, async (req, res) => {
+router.put('/:id', withAuth, async (req, res) => {
   try {
     const [affectedRows] = await Post.update(req.body, {
       where: {
         id: req.params.id,
         userId: req.session.userId,
-      },
-    });
-
-    if (affectedRows > 0) {
-      res.status(200).end();
-    } else {
-      res.status(404).end();
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.delete('/delete/:id', withAuth, async (req, res) => {
-  try {
-    const [affectedRows] = Post.destroy({
-      where: {
-        id: req.params.id,
-        userId: req.session.userId, 
       },
     });
 

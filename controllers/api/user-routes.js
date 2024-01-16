@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { User } = require('../../models');
 
-router.post('/signup', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const newUser = await User.create({
       username: req.body.username,
@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
         username: req.body.username,
       },
     });
-
+// error handling if there is no user found Below)
     if (!user || !user.checkPassword(req.body.password)) {
       res.status(400).json({ message: 'Incorrect username or password!' });
       return;
@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
       res.json({ user, message: 'You are now logged in!' });
     });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(400).json({message: 'User Account Not Found :( '});
   }
 });
 
