@@ -1,24 +1,20 @@
 // Comment.js
-const { DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/config');
+// Comments Model / TABLE in MySQL workbench
+class Comment extends Model {}
 
-const Comment = sequelize.define('Comment', {
-  content: {
-    type: DataTypes.TEXT,
-    allowNull: false,
+Comment.init(
+  {
+    body: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   },
-});
-
-// Define associations with other models
-Comment.associate = (models) => {
-  Comment.belongsTo(models.User, {
-    foreignKey: 'userId',
-  });
-
-  Comment.belongsTo(models.Post, {
-    foreignKey: 'postId',
-    onDelete: 'CASCADE',
-  });
-};
+  {
+    sequelize,
+    freezeTableName: true,
+  }
+);
 
 module.exports = Comment;

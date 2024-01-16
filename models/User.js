@@ -1,36 +1,37 @@
 // User.js:
-const { DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/config');
-
-const User = sequelize.define('User', {
-  // Define fields here, for example:
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
-
-// Define associations with other models
-User.associate = (models) => {
-  User.hasMany(models.Post, {
-    foreignKey: 'userId',
-    onDelete: 'CASCADE',
-  });
-
-  User.hasMany(models.Comment, {
-    foreignKey: 'userId',
-    onDelete: 'CASCADE',
-  });
+// creation of USER model / table in SQLWorkbench 
+class User extends Model {
+  checkPassword(loginPassword) {
+    // can try to implement Bcrypt in the future into this application in order to get better first hand experience.
+    return loginPassword == this.password;
+  }
 };
+
+// what is included in each column of the USER TABLE (id, name, pass)
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    underscored: true,
+    modelName: `User`
+  }
+);
 
 module.exports = User;

@@ -1,28 +1,19 @@
 // Post.js
-const { DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/config');
 
-const Post = sequelize.define('Post', {
-  title: {
-    type: DataTypes.STRING,
+class Post extends Model {}
+// creating post body preferences (must be string for creation of title + whatever the post is)
+Post.init(
+  {
+    title: DataTypes.STRING,
+    body: DataTypes.STRING,
     allowNull: false,
   },
-  content: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-});
-
-// Define associations with other models
-Post.associate = (models) => {
-  Post.belongsTo(models.User, {
-    foreignKey: 'userId',
-  });
-
-  Post.hasMany(models.Comment, {
-    foreignKey: 'postId',
-    onDelete: 'CASCADE',
-  });
-};
+  {
+    sequelize,
+    freezeTableName: true,
+  }
+);
 
 module.exports = Post;
