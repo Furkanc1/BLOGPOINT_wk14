@@ -6,6 +6,7 @@
 // IMPORTANT: Initializing sequelize requires 2 things
 // - requiring it from Sequelize dependency, and creating a connection to the database:
 const Sequelize = require(`sequelize`);
+require('dotenv').config();
 
 let sequelize;
 // these are environmental variables which will come from the .env file ( stores sensitive information )

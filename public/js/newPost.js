@@ -1,11 +1,13 @@
-// function used to handle NewForm submittion events:
+// a function that is called everytime a form is filled out then the submit button is pressed
+
+// (creates the post, puts it at our end point, then redirects the user to the dashboard where the posts can be viewed.)
 
 const newFormHandler = async function(event) {
   event.preventDefault();
 
-   // taking in user info when its filled out
-  const title = document.querySelector('input[name="post-title"]').value;
-  const body = document.querySelector('textarea[name="post-body"]').value;
+   // dom manipulation to grab the specific text we need (that the user is filling out in the form)
+  const title = document.querySelector('#project-name').value;
+  const body = document.querySelector('#project-desc').value;
   // Sending data from the form via post request
   await fetch(`/api/post`, {
     method: 'POST',
@@ -13,11 +15,13 @@ const newFormHandler = async function(event) {
       title,
       body,
     }),
+    // Key-value pair, content being sent in request body is in JSON format
     headers: { 'Content-Type': 'application/json' },
   });
-  document.location.replace('/dashboard');
+  // Redircting the user to another page to see the updated info (the new post)
+  document.location.reload();
 };
 
 document
-  .querySelector('#new-post-form')
+  .querySelector('.new-project-form')
   .addEventListener('submit', newFormHandler);
