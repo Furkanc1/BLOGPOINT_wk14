@@ -1,17 +1,18 @@
-// Post.js
-const { DataTypes, Model } = require('sequelize');
+// This is the backend implementation for handling the post data by defining the structure of a Post and managing its interactions with the database.
+const { Sequelize, Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/config');
 
 class Post extends Model {}
-// creating post body preferences (must be string for creation of title + whatever the post is)
+
+// our posts have two main data points: the input (string) in the title, and the body, which the user creates with the newPost.js
 Post.init(
   {
     title: DataTypes.STRING,
-    body: DataTypes.STRING,
-    allowNull: false,
+    body: DataTypes.STRING
   },
   {
     sequelize,
+    // need this otherwise inflection happens, we want to work with un inflected tables
     freezeTableName: true,
   }
 );

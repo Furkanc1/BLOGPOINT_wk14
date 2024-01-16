@@ -1,15 +1,25 @@
-// index.js
-const Comment = require('./Comment');
-const Post = require('./Post');
 const User = require('./User');
+const Post = require('./Post');
+const Comment = require('./Comment');
 
-// Define associations between models
-// For example, if a User has many Posts:
-Post.belongsTo(User, { foreignKey: 'userId', onDelete: `CASCADE` });
+Post.belongsTo(User, {
+  foreignKey: 'userId',
+   // we use CASCADE so that all related data is removed when a parent record is deleted
+  onDelete: 'CASCADE'
+});
 
-// If a Post has many Comments:
-Post.hasMany(Comment, { foreignKey: 'postId', onDelete: `CASCADE` });
-Comment.belongsTo(User, { foreignKey: 'userId', onDelete: `CASCADE` });
+Post.hasMany(Comment, {
+  foreignKey: 'postId',
+  onDelete: 'CASCADE'
+});
 
-// export your models
-module.exports = { Comment, Post, User };
+Comment.belongsTo(User, {
+  foreignKey: 'userId',
+  onDelete: 'CASCADE'
+});
+
+module.exports = {
+  User,
+  Post,
+  Comment
+};

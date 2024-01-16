@@ -17,18 +17,21 @@ router.get('/', withAuth, async (req, res) => {
       logged_in: req.session.loggedIn
     });
   } catch (error) {
-    console.error('Error retrieving posts:', error);
-    res.redirect('login');
+    res.status(500).json(error.message);
   }
 });
 
-router.get('edit', withAuth, (req, res) => {
-  res.render('admin-new-post', {
-    layout: 'dashboard',
-    title: 'New Post',
-    userId: req.session.userId,
-    path: req.route.path
-  });
+router.get('/edit/:id', withAuth, async (req, res) => {
+  try {
+    const postData = await Post.findByPk(req.params.id);
+    const post = postData.get({plain:true})
+    res.render('edit', {
+      ...post,
+      logged_in: req.session.loggedIn
+    });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
 });
 
 module.exports = router;
