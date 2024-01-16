@@ -1,45 +1,27 @@
-// Function to handle comment form submission
-function commentFormHandler(event) {
+const commentFormHandler = async function(event) {
   event.preventDefault();
 
-  // Get values from the form
-  const postIdInput = document.querySelector('input[name="post-id"]');
-  const commentBodyInput = document.querySelector('textarea[name="comment-body"]');
-  const postId = postIdInput.value;
-  const body = commentBodyInput.value;
+  // creating variables to store the specific values within th elements of the form
+  const postId = document.querySelector('input[name="post-id"]').value;
+  const body = document.querySelector('textarea[name="comment-body"]').value;
 
-  // Check if the comment body is not empty
+  // if the body exists, exececute the post method
   if (body) {
-    // Create a comment object
-    const commentData = {
-      postId: postId,
-      body: body
-    };
-
-    // Send a POST request to the server
-    fetch('/api/comment', {
+    await fetch('/api/comment', {
       method: 'POST',
-      body: JSON.stringify(commentData),
+      body: JSON.stringify({
+        postId,
+        body
+      }),
       headers: {
         'Content-Type': 'application/json'
       }
-    })
-      .then(response => {
-        if (response.ok) {
-          // Reload the page after successful comment submission
-          document.location.reload();
-        } else {
-          console.error('Failed to submit comment');
-        }
-      })
-      .catch(error => {
-        console.error('Error submitting comment:', error);
-      });
+    });
+    // Reload to update the page with the recent changes from the post request
+    document.location.reload();
   }
-}
+};
 
-// Attach the commentFormHandler to the forms submit
-const newCommentForm = document.querySelector('#new-comment-form');
-if (newCommentForm) {
-  newCommentForm.addEventListener('submit', commentFormHandler);
-}
+document
+  .querySelector('#new-comment-form')
+  .addEventListener('submit', commentFormHandler);

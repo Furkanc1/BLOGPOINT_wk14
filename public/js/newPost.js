@@ -1,9 +1,12 @@
+// function used to handle NewForm submittion events:
+
 const newFormHandler = async function(event) {
   event.preventDefault();
 
+   // taking in user info when its filled out
   const title = document.querySelector('input[name="post-title"]').value;
   const body = document.querySelector('textarea[name="post-body"]').value;
-
+  // Sending data from the form via post request
   await fetch(`/api/post`, {
     method: 'POST',
     body: JSON.stringify({
@@ -12,7 +15,6 @@ const newFormHandler = async function(event) {
     }),
     headers: { 'Content-Type': 'application/json' },
   });
-
   document.location.replace('/dashboard');
 };
 
